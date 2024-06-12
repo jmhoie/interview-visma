@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cartItems, removeFromCart, calcTotal, applyDiscount } from "../../stores/cartStore";
+	import { cartItems, removeFromCart, cartTotal, applyDiscount } from "../../stores/cartStore";
 	import menuItemIcon from "$lib/assets/menu_item_icon.png"
 </script>
 
@@ -54,10 +54,10 @@
             <div class="space-y-2">
               <div class="flex items-center justify-between gap-4">
                 <p>Original price</p>
-		<p class="font-semibold">{calcTotal()},-</p>
+		<p class="font-semibold">{$cartTotal},-</p>
               </div>
 
-	      {#if !$cartItems.some(e => e.spicy === false)}
+              {#if $cartItems.length > 0 && !$cartItems.some(e => e.spicy === false)}
               <div class="flex items-center justify-between gap-4">
                 <p>Spicy Discount</p>
                 <p class="font-semibold text-green-500">-10%</p>
@@ -66,8 +66,10 @@
 
             <div class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
               <p class="font-bold text-gray-900">Total</p>
-	      {#if $cartItems.some(e => e.spicy === false)}
-		      <p class="font-bold text-gray-900">{calcTotal()},-</p>
+              {#if $cartItems.length === 0}
+		      <p class="font-bold text-gray-900">0,-</p>
+	      {:else if $cartItems.some(e => e.spicy === false)}
+		      <p class="font-bold text-gray-900">{$cartTotal},-</p>
 	      {:else}
 		      <p class="font-bold text-gray-900">{applyDiscount()},-</p>
 	      {/if}

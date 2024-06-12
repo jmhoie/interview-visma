@@ -15,16 +15,23 @@ interface CartItem extends MenuItem {
 }
 
 export const cartItems = writable<CartItem[]>([]);
+export const cartTotal = writable<number>(0);
 
 if (browser) {
 	if (localStorage.cartItems) {
 		cartItems.set(JSON.parse(localStorage.cartItems));
 	}
 	cartItems.subscribe((items) => localStorage.cartItems = JSON.stringify(items));
+
+	if (localStorage.cartTotal) {
+		cartTotal.set(JSON.parse(localStorage.cartTotal));
+	}
+	cartTotal.subscribe((items) => localStorage.cartTotal = JSON.stringify(items));
 }
 
 export function addToCart(menuItem: MenuItem) {
 	let items = get(cartItems);
+	let total = get(cartTotal);
 
 	// If item already in cart, increment the amount
 	for (let item of items) {
@@ -38,12 +45,14 @@ export function addToCart(menuItem: MenuItem) {
 	// Else, we add it
 	const cartItem = { ...menuItem, amount: 1 };
 	cartItems.set([...items, cartItem]);
-
-	console.log(get(cartItems));
+	total += menuItem.price;
+	cartTotal.set(total);
+	return;
 }
 
 export function removeFromCart(id: number) {
 	let items = get(cartItems);
+	let total = get(cartTotal)
 
 	for (let item of items) {
 		if (item.id === id) {
@@ -53,22 +62,15 @@ export function removeFromCart(id: number) {
 				items = items.filter((item) => item.id !== id);
 			}
 			cartItems.set(items);
+			total = Math.max(0, total - item.price);
+			cartTotal.set(total);
 			return;
 		}
 	}
 }
 
-export function calcTotal() {
-	let items = get(cartItems);
-	let sum = 0;
-
-	for (let item of items) {
-		sum += item.price;
-	}
-	return sum;
-}
-
 export function applyDiscount() {
-	let sum = calcTotal()
-	return sum - (sum/10);
+	let total = get(cartTotal);
+	total = total - (total/10);
+	return total;
 }
