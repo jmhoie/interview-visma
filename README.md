@@ -1,5 +1,5 @@
 # Jan Markus Høie - Visma Interview Case
-Frontend: `SvelteKit` + `TypeScript`  
+Frontend: `SvelteKit` + `TypeScript` + `TailwindCSS`  
 Backend: `Python FastAPI`
 
 To run the whole project both the frontend and backend servers must be started.
