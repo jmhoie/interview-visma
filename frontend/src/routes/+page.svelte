@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { cartItems, addToCart } from "../stores/cartStore";
 	import menuItemIcon from "$lib/assets/menu_item_icon.png";
 	import cartIcon from "$lib/assets/cart_icon.png";
-	let menuItems = [
-		{id: 0, name: "Pizza", spicy: false, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 179.0, available: true},
-		{id: 1, name: "Cheeseburger", spicy: false, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 199.0, available: false},
-		{id: 2, name: "Hot Wings", spicy: true, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 169.0, available: true},
-		{id: 3, name: "Ramen Soup", spicy: true, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 229.0, available: true},
-		{id: 4, name: "Steak", spicy: false, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 369.0, available: true},
-		{id: 5, name: "Pasta Carbonara", spicy: false, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", price: 229.0, available: true},
-        ]
 
+	let menuItems = [];
+	onMount(async function () {
+		const response = await fetch("http://0.0.0.0:80/menu");
+		const data = await response.json();
+		console.log(data);
+		menuItems = data;
+	});
+	
 </script>
 <main>
 	<!-- NAV BAR -->

@@ -2,7 +2,7 @@ import { browser } from "$app/environment";
 import { get, writable } from "svelte/store";
 
 interface MenuItem {
-	id: number;
+	id: string;
 	name: string;
 	spicy: boolean;
 	description: string;
@@ -16,7 +16,9 @@ interface CartItem extends MenuItem {
 
 export const cartItems = writable<CartItem[]>([]);
 export const cartTotal = writable<number>(0);
+export const orderId = writable<number>(1);
 
+// Use use the browser cache to have objects persist through refresh/routes
 if (browser) {
 	if (localStorage.cartItems) {
 		cartItems.set(JSON.parse(localStorage.cartItems));
@@ -27,6 +29,11 @@ if (browser) {
 		cartTotal.set(JSON.parse(localStorage.cartTotal));
 	}
 	cartTotal.subscribe((items) => localStorage.cartTotal = JSON.stringify(items));
+
+	if (localStorage.orderId) {
+		orderId.set(JSON.parse(localStorage.orderId));
+	}
+	orderId.subscribe((items) => localStorage.orderId = JSON.stringify(items));
 }
 
 export function addToCart(menuItem: MenuItem) {
@@ -50,7 +57,7 @@ export function addToCart(menuItem: MenuItem) {
 	return;
 }
 
-export function removeFromCart(id: number) {
+export function removeFromCart(id: string) {
 	let items = get(cartItems);
 	let total = get(cartTotal)
 
@@ -67,6 +74,11 @@ export function removeFromCart(id: number) {
 			return;
 		}
 	}
+}
+
+export function resetCart() {
+	cartItems.set([]);
+	cartTotal.set(0);
 }
 
 export function applyDiscount() {

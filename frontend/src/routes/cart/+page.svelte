@@ -1,6 +1,25 @@
 <script lang="ts">
-	import { cartItems, removeFromCart, cartTotal, applyDiscount } from "../../stores/cartStore";
+	import { cartItems, resetCart, removeFromCart, cartTotal, applyDiscount, orderId } from "../../stores/cartStore";
 	import menuItemIcon from "$lib/assets/menu_item_icon.png"
+
+        async function submitOrder() {
+          const order = {
+            id: $orderId,
+            items: $cartItems.map(item => item.id),
+            total: $cartTotal,
+            status: "pending",
+          };
+
+          await fetch("http://0.0.0.0:80/order", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json"
+            },
+            body: JSON.stringify(order),
+          });
+
+          orderId.update((id) => id+1);
+        };
 </script>
 
 <!-- NAV BAR -->
@@ -28,7 +47,7 @@
 
               <div class="flex items-center justify-between md:order-3 md:justify-end">
                 <div class="text-end md:order-4 md:w-32">
-			<p class="text-base font-bold text-gray-900">{item.price}</p>
+			<p class="text-base font-bold text-gray-900">{item.price},-</p>
                 </div>
               </div>
 
@@ -76,7 +95,8 @@
             </div>
           </div>
 
-          <button class="flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-red-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-primary-300">Submit Order</button>
+          <button on:click={() => submitOrder()} class="flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-red-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-primary-300">Submit Order</button>
+          <button on:click={() => resetCart()} class="flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-red-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-primary-300">Reset Cart</button>
       </div>
     </div>
   </div>
