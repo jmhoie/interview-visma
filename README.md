@@ -1,5 +1,5 @@
 # Jan Markus Høie - Visma Interview Case
-Frontend: `SvelteKit` + `TypeScript`
+Frontend: `SvelteKit` + `TypeScript`  
 Backend: `Python FastAPI`
 
 To run the whole project both the frontend and backend servers must be started.
@@ -14,7 +14,7 @@ cd backend
 docker build -t backend_img .
 docker run -it --rm --name backend -p 80:80 backend_img
 ```
-or without Docker:
+or without `Docker`:
 ```bash
 cd backend
 
